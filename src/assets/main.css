@@ -1,35 +1,205 @@
-@import './base.css';
+@import 'tailwindcss';
 
+@theme {
+  --color-smart-bg: #061016;
+  --color-smart-editor: #071219;
+  --color-smart-surface: #0b1720;
+  --color-smart-panel: #101e29;
+  --color-smart-panel-soft: #142432;
+  --color-smart-border: #20303b;
+  --color-smart-navy: #20384c;
+  --color-smart-green: #45c186;
+  --color-smart-green-bright: #67e8a8;
+  --color-smart-text: #eef7f4;
+  --color-smart-muted: #8fa5b3;
+  --color-smart-code: #bfe7d4;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', 'SF Mono', 'SFMono-Regular', ui-monospace, monospace;
+}
+
+:root {
+  color-scheme: dark;
+  font-family:
+    'Inter',
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    sans-serif;
+  background: #061016;
+  color: #eef7f4;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
 #app {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  font-weight: normal;
+  min-width: 320px;
+  min-height: 100%;
+  margin: 0;
 }
 
-a,
-.green {
-  text-decoration: none;
-  color: hsla(160, 100%, 37%, 1);
-  transition: 0.4s;
-  padding: 3px;
+body {
+  min-height: 100vh;
+  overflow-x: hidden;
+  background:
+    radial-gradient(circle at 50% -20%, rgba(69, 193, 134, 0.08), transparent 38%), #061016;
 }
 
-@media (hover: hover) {
-  a:hover {
-    background-color: hsla(160, 100%, 37%, 0.2);
-  }
+button,
+input,
+textarea {
+  font: inherit;
 }
 
-@media (min-width: 1024px) {
-  body {
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+::selection {
+  color: #061016;
+  background: #67e8a8;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #071219;
+}
+
+::-webkit-scrollbar-thumb {
+  border: 3px solid #071219;
+  border-radius: 999px;
+  background: #20384c;
+}
+
+@layer components {
+  .workspace-link {
     display: flex;
-    place-items: center;
+    min-width: 0;
+    align-items: center;
+    gap: 10px;
+    color: #c9d8df;
+    font-size: 16px;
+    font-weight: 500;
+    text-decoration: none;
   }
 
-  #app {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    padding: 0 2rem;
+  .workspace-link::before {
+    content: '•';
+    flex: 0 0 auto;
+    color: #45c186;
+    font-family:
+      'Inter',
+      -apple-system,
+      BlinkMacSystemFont,
+      'Segoe UI',
+      sans-serif;
+    font-size: 18px;
+    font-weight: 760;
+  }
+
+  .workspace-link:hover {
+    color: #67e8a8;
+  }
+
+  .theme-light {
+    color-scheme: light;
+    background: #f4f7f5;
+    color: #14231c;
+  }
+
+  .theme-light .bg-smart-bg,
+  .theme-light [class~='bg-[#061016]'] {
+    background-color: #f4f7f5 !important;
+  }
+
+  .theme-light .bg-smart-surface,
+  .theme-light .bg-smart-editor,
+  .theme-light .bg-smart-panel,
+  .theme-light [class~='bg-[#071219]'],
+  .theme-light [class~='bg-[#080d1d]'],
+  .theme-light [class~='bg-[#0b1720]'],
+  .theme-light [class~='bg-[#0d1821]'],
+  .theme-light [class~='bg-[#0c1b25]'] {
+    background-color: #fbfdfc !important;
+  }
+
+  .theme-light .bg-smart-panel-soft,
+  .theme-light [class~='bg-[#102332]'],
+  .theme-light [class~='bg-[#123123]'],
+  .theme-light [class~='bg-[#142432]'],
+  .theme-light [class~='bg-[#163525]'] {
+    background-color: #e6f2ec !important;
+  }
+
+  .theme-light .border-smart-border,
+  .theme-light [class~='border-[#102332]'] {
+    border-color: #c9d9d0 !important;
+  }
+
+  .theme-light .text-smart-text,
+  .theme-light [class~='text-[#eef7f4]'],
+  .theme-light [class~='text-[#e7edf8]'],
+  .theme-light [class~='text-[#c9d8df]'] {
+    color: #14231c !important;
+  }
+
+  .theme-light .text-smart-muted,
+  .theme-light [class~='text-[#8fa5b3]'] {
+    color: #6d7f75 !important;
+  }
+
+  .theme-light .text-smart-code,
+  .theme-light [class~='text-[#bfe7d4]'] {
+    color: #155f40 !important;
+  }
+
+  .theme-light .text-smart-green,
+  .theme-light .text-smart-green-bright {
+    color: #17885a !important;
+  }
+
+  .theme-light .bg-smart-green,
+  .theme-light .bg-smart-green-bright {
+    background-color: #17885a !important;
+  }
+
+  .theme-light .border-smart-green {
+    border-color: #17885a !important;
+  }
+
+  .theme-light .hover\:text-smart-green-bright:hover,
+  .theme-light .hover\:text-smart-green:hover {
+    color: #0f6b45 !important;
+  }
+
+  .theme-light .hover\:border-smart-green\/50:hover,
+  .theme-light .hover\:border-smart-green\/40:hover {
+    border-color: rgba(23, 136, 90, 0.5) !important;
+  }
+
+  .theme-light .hover\:bg-smart-panel:hover,
+  .theme-light .hover\:bg-smart-surface:hover,
+  .theme-light .hover\:bg-\[\#163525\]:hover {
+    background-color: #edf6f1 !important;
+  }
+
+  .theme-light ::-webkit-scrollbar-track {
+    background: #f4f7f5;
+  }
+
+  .theme-light ::-webkit-scrollbar-thumb {
+    border-color: #f4f7f5;
+    background: #c9d9d0;
   }
 }
