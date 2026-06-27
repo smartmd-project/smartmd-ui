@@ -117,12 +117,14 @@ function handleEditorBlur() {
 </script>
 
 <template>
-  <article class="min-h-0 flex-1 overflow-y-auto bg-smart-editor px-5 py-8 sm:px-8 lg:px-[34px]">
-    <div class="mx-auto flex w-full max-w-[840px] flex-col gap-6 bg-smart-editor">
+  <article
+    class="editor-pane min-h-0 flex-1 overflow-y-auto bg-smart-editor px-5 py-8 sm:px-8 lg:px-[34px]"
+  >
+    <div class="editor-page mx-auto flex w-full max-w-[840px] flex-col gap-6 bg-smart-editor">
       <div
         v-if="mode === 'edit'"
         ref="editorElement"
-        class="markdown-edit-input min-h-[560px] pb-10 font-mono text-base leading-7 outline-none"
+        class="markdown-edit-input min-h-[560px] pb-10 font-mono text-[16px] leading-[1.75] outline-none"
         contenteditable="true"
         role="textbox"
         aria-label="Markdown document content"
@@ -132,7 +134,7 @@ function handleEditorBlur() {
         @blur="handleEditorBlur"
       />
 
-      <article v-else class="markdown-preview pb-12 text-[#c9d8df]">
+      <article v-else class="markdown-preview pb-12 text-base leading-[1.75] text-smart-text">
         <template v-for="(block, index) in blocks" :key="index">
           <h1
             v-if="block.type === 'heading' && block.level === 1"
@@ -151,17 +153,17 @@ function handleEditorBlur() {
           />
           <p
             v-else-if="block.type === 'paragraph'"
-            class="my-4 text-[15px] leading-7"
+            class="my-4 text-base leading-[1.75]"
             v-html="renderInlineMarkdown(block.content)"
           />
           <blockquote
             v-else-if="block.type === 'quote'"
-            class="my-[18px] rounded border-l-4 border-smart-green/70 bg-smart-surface px-[18px] py-[15px] text-[15px] leading-7 text-smart-code"
+            class="my-[18px] rounded border-l-4 border-smart-green/70 bg-smart-surface px-[18px] py-[15px] text-base leading-[1.75] text-smart-muted"
             v-html="renderInlineMarkdown(block.content)"
           />
           <ul
             v-else-if="block.type === 'unordered-list'"
-            class="my-[18px] space-y-[9px] text-[15px]"
+            class="my-[18px] space-y-2.5 text-base leading-[1.75]"
           >
             <li v-for="item in block.items" :key="item" class="flex gap-3">
               <span class="mt-2.5 size-1.5 shrink-0 rounded-full bg-smart-green" />
@@ -170,20 +172,20 @@ function handleEditorBlur() {
           </ul>
           <ol
             v-else-if="block.type === 'ordered-list'"
-            class="my-[18px] list-decimal space-y-[9px] pl-6 text-[15px] marker:text-smart-green-bright"
+            class="my-[18px] list-decimal space-y-2.5 pl-6 text-base leading-[1.75] marker:text-smart-green-bright"
           >
             <li v-for="item in block.items" :key="item" v-html="renderInlineMarkdown(item)" />
           </ol>
           <pre
             v-else-if="block.type === 'code'"
-            class="my-[18px] overflow-x-auto rounded-lg border border-smart-border bg-smart-editor p-4 font-mono text-[13px] leading-6 text-smart-code"
+            class="my-[18px] overflow-x-auto rounded-lg border border-smart-border bg-smart-surface p-4 font-mono text-[13px] leading-6 text-smart-code"
           ><code>{{ block.content }}</code></pre>
           <div
             v-else-if="block.type === 'table'"
             class="my-7 overflow-hidden rounded-lg border border-smart-border"
           >
             <table class="w-full border-collapse text-left text-[13px]">
-              <thead class="bg-smart-panel font-mono text-[11px] text-smart-green-bright">
+              <thead class="bg-smart-panel font-mono text-[11px] text-smart-green">
                 <tr>
                   <th
                     v-for="header in block.headers"
@@ -229,67 +231,67 @@ function handleEditorBlur() {
   margin: 0;
   padding: 0 0 2.5rem;
   tab-size: 2;
-  color: #c9d8df;
-  caret-color: #67e8a8;
+  color: #111827;
+  caret-color: #00b781;
 }
 
 .markdown-edit-input:empty::before {
   content: attr(data-placeholder);
-  color: #8fa5b3;
+  color: #8a8f98;
 }
 
 .markdown-edit-input::selection {
-  background: rgba(103, 232, 168, 0.24);
+  background: rgba(0, 183, 129, 0.16);
 }
 
 .markdown-edit-input :deep(.md-heading-marker) {
-  color: #45c186;
+  color: #00b781;
 }
 
 .markdown-edit-input :deep(.md-heading-text) {
-  color: #eef7f4;
+  color: #111827;
 }
 
 .markdown-edit-input :deep(.md-quote-marker),
 .markdown-edit-input :deep(.md-list-marker) {
-  color: #45c186;
+  color: #00b781;
 }
 
 .markdown-edit-input :deep(.md-quote-text) {
-  color: #bfe7d4;
+  color: #4b5563;
 }
 
 .markdown-edit-input :deep(.md-fence),
 .markdown-edit-input :deep(.md-inline-code) {
-  color: #67e8a8;
+  color: #00a876;
 }
 
 .markdown-edit-input :deep(.md-strong) {
-  color: #eef7f4;
+  color: #111827;
 }
 
 .markdown-edit-input :deep(.md-emphasis) {
-  color: #d6eee3;
+  color: #374151;
 }
 
 .markdown-edit-input :deep(.md-link-label) {
-  color: #67e8a8;
+  color: #00a876;
 }
 
 .markdown-edit-input :deep(.md-link-url) {
-  color: #8fa5b3;
+  color: #8a8f98;
 }
 
 .markdown-preview :deep(strong) {
-  color: #eef7f4;
+  color: #111827;
   font-weight: 700;
 }
 
 .markdown-preview :deep(code) {
   border-radius: 4px;
-  background: #142432;
+  background: #f4f4f5;
   padding: 0.12rem 0.35rem;
-  color: #67e8a8;
+  color: #047857;
   font-family: 'JetBrains Mono', 'SF Mono', 'SFMono-Regular', ui-monospace, monospace;
 }
 
@@ -300,7 +302,7 @@ function handleEditorBlur() {
 }
 
 .markdown-preview :deep(a) {
-  color: #67e8a8;
+  color: #047857;
   text-decoration: underline;
   text-underline-offset: 3px;
 }
@@ -309,7 +311,7 @@ function handleEditorBlur() {
   display: block;
   max-width: 100%;
   margin: 1rem 0;
-  border: 1px solid #20303b;
+  border: 1px solid #e4e4e7;
   border-radius: 8px;
 }
 </style>

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
 import { RouterLink, useRouter } from 'vue-router'
-import { ArrowRight, Github, Lock, Mail } from 'lucide-vue-next'
+import { Github } from 'lucide-vue-next'
 
 import AppLogo from '@/components/AppLogo.vue'
 import AuthInput from '@/components/AuthInput.vue'
@@ -67,35 +67,23 @@ function handleGithubLogin() {
 <template>
   <AuthLayout>
     <div
-      class="mx-auto flex w-full max-w-[440px] flex-col gap-[22px] rounded-lg border border-smart-navy bg-smart-surface/95 px-6 py-7 shadow-[0_12px_24px_rgba(0,0,0,.7)] sm:px-9 sm:pb-8 sm:pt-9"
+      class="auth-card mx-auto flex w-full max-w-[440px] flex-col gap-[22px] rounded-lg border border-smart-border bg-smart-surface/95 px-6 py-7 sm:px-9 sm:pb-8 sm:pt-9"
     >
-      <AppLogo />
-
-      <div>
-        <h1 class="text-[36px] font-semibold leading-[1.05] text-smart-text sm:text-[42px]">
-          Welcome back
-        </h1>
-        <p class="mt-2 text-[15px] leading-[1.45] text-smart-muted">
-          Sign in to continue editing clinical markdown with structured AI assistance.
-        </p>
-      </div>
-
+      <AppLogo icon-only large class="w-full justify-center" />
       <form class="flex flex-col gap-4" @submit.prevent="handleSubmit">
         <button
           type="button"
-          class="flex h-12 items-center justify-center gap-2.5 rounded border border-[#2c4150] bg-smart-editor text-sm font-semibold text-smart-text transition hover:border-smart-green/50 hover:bg-smart-panel"
+          class="flex h-12 items-center justify-center gap-2.5 rounded bg-smart-editor text-sm font-semibold text-smart-text shadow-[inset_0_0_0_1px_rgba(255,255,255,.04),0_1px_2px_rgba(0,0,0,.18)] transition hover:bg-smart-panel focus:outline-none focus:ring-2 focus:ring-smart-green/30"
           @click="handleGithubLogin"
         >
           <Github :size="20" :stroke-width="1.5" />
           Continue with GitHub
         </button>
 
-        <div class="flex h-5 items-center gap-3">
-          <span class="h-px flex-1 bg-smart-border" />
+        <div class="flex h-5 items-center justify-center">
           <span class="font-mono text-[10px] font-semibold text-smart-muted">
             or continue with email
           </span>
-          <span class="h-px flex-1 bg-smart-border" />
         </div>
 
         <AuthInput
@@ -104,31 +92,24 @@ function handleGithubLogin() {
           label="Email"
           type="email"
           autocomplete="email"
-          placeholder="doctor@smartmd.ai"
+          placeholder="Email"
           :error="errors.email"
-        >
-          <template #icon>
-            <Mail :size="20" class="text-smart-muted" :stroke-width="1.5" />
-          </template>
-        </AuthInput>
+          hide-label
+          borderless
+        />
         <AuthInput
           id="login-password"
           v-model="password"
           label="Password"
           type="password"
           autocomplete="current-password"
-          placeholder="••••••••••••"
+          placeholder="Password"
           :error="errors.password"
-        >
-          <template #icon>
-            <Lock :size="20" class="text-smart-muted" :stroke-width="1.5" />
-          </template>
-        </AuthInput>
+          hide-label
+          borderless
+        />
 
-        <p
-          v-if="formError"
-          class="rounded border border-red-400/30 bg-red-500/10 px-3 py-2 text-sm text-red-200"
-        >
+        <p v-if="formError" class="auth-error rounded border px-3 py-2 text-sm">
           {{ formError }}
         </p>
 
@@ -151,12 +132,11 @@ function handleGithubLogin() {
 
         <PrimaryButton type="submit" :disabled="isSubmitting">
           {{ isSubmitting ? 'Signing in...' : 'Sign in' }}
-          <ArrowRight v-if="!isSubmitting" :size="20" :stroke-width="1.5" />
         </PrimaryButton>
       </form>
 
       <p class="text-center text-sm text-smart-muted">
-        New to SmartMD?
+        New to Smartmd?
         <RouterLink
           to="/register"
           class="ml-1 font-semibold text-smart-green-bright hover:underline"

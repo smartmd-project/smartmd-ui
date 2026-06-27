@@ -7,7 +7,7 @@ const grammarCheckEnabled = ref(true)
 
 <template>
   <footer
-    class="flex h-7 shrink-0 items-center justify-end border-t border-smart-border bg-[#071219] px-4 font-mono text-[11px] font-semibold text-[#c9d8df]"
+    class="flex h-7 shrink-0 items-center justify-end border-t border-smart-border bg-smart-editor px-4 font-mono text-[11px] font-semibold text-smart-text"
   >
     <div class="flex items-center gap-3.5">
       <span>Markdown</span>
@@ -16,7 +16,7 @@ const grammarCheckEnabled = ref(true)
       <button
         type="button"
         class="inline-flex h-6 items-center gap-[7px] rounded-md px-1.5 transition hover:bg-smart-surface focus:outline-none focus:ring-2 focus:ring-smart-green/30"
-        :class="grammarCheckEnabled ? 'text-smart-green-bright' : 'text-smart-muted'"
+        :class="grammarCheckEnabled ? 'text-smart-green' : 'text-smart-muted'"
         :aria-pressed="grammarCheckEnabled"
         @click="grammarCheckEnabled = !grammarCheckEnabled"
       >

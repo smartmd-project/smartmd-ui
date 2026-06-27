@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
 import { RouterLink, useRouter } from 'vue-router'
-import { ArrowRight, Github, Lock, LockKeyhole, Mail, User } from 'lucide-vue-next'
+import { Github } from 'lucide-vue-next'
 
 import AppLogo from '@/components/AppLogo.vue'
 import AuthInput from '@/components/AuthInput.vue'
@@ -88,33 +88,22 @@ function handleGithubLogin() {
 <template>
   <AuthLayout>
     <div
-      class="mx-auto flex w-full max-w-[480px] flex-col gap-[18px] rounded-lg border border-smart-navy bg-smart-surface/95 px-6 py-7 shadow-[0_12px_24px_rgba(0,0,0,.7)] sm:px-9 sm:pb-[30px] sm:pt-[34px]"
+      class="auth-card mx-auto flex w-full max-w-[480px] flex-col gap-[18px] rounded-lg border border-smart-border bg-smart-surface/95 px-6 py-7 sm:px-9 sm:pb-[30px] sm:pt-[34px]"
     >
-      <AppLogo />
-
-      <div>
-        <h1 class="text-[34px] font-semibold leading-[1.05] text-smart-text sm:text-[40px]">
-          Create account
-        </h1>
-        <p class="mt-2 text-[15px] leading-[1.45] text-smart-muted">
-          Start a secure markdown workspace for clinical drafts, templates, and review notes.
-        </p>
-      </div>
+      <AppLogo icon-only large class="w-full justify-center" />
 
       <form class="flex flex-col gap-3.5" @submit.prevent="handleSubmit">
         <button
           type="button"
-          class="flex h-12 items-center justify-center gap-2.5 rounded border border-[#2c4150] bg-smart-editor text-sm font-semibold text-smart-text transition hover:border-smart-green/50 hover:bg-smart-panel"
+          class="flex h-12 items-center justify-center gap-2.5 rounded bg-smart-editor text-sm font-semibold text-smart-text shadow-[inset_0_0_0_1px_rgba(255,255,255,.04),0_1px_2px_rgba(0,0,0,.18)] transition hover:bg-smart-panel focus:outline-none focus:ring-2 focus:ring-smart-green/30"
           @click="handleGithubLogin"
         >
           <Github :size="20" :stroke-width="1.5" />
           Sign up with GitHub
         </button>
 
-        <div class="flex h-5 items-center gap-3">
-          <span class="h-px flex-1 bg-smart-border" />
+        <div class="flex h-5 items-center justify-center">
           <span class="font-mono text-[10px] font-semibold text-smart-muted">or use email</span>
-          <span class="h-px flex-1 bg-smart-border" />
         </div>
 
         <AuthInput
@@ -123,13 +112,11 @@ function handleGithubLogin() {
           compact
           label="Name"
           autocomplete="name"
-          placeholder="Dr. Lena Ortiz"
+          placeholder="Name"
           :error="errors.name"
-        >
-          <template #icon>
-            <User :size="20" class="text-smart-muted" :stroke-width="1.5" />
-          </template>
-        </AuthInput>
+          hide-label
+          borderless
+        />
         <AuthInput
           id="register-email"
           v-model="email"
@@ -137,13 +124,11 @@ function handleGithubLogin() {
           label="Email"
           type="email"
           autocomplete="email"
-          placeholder="lena@clinic.org"
+          placeholder="Email"
           :error="errors.email"
-        >
-          <template #icon>
-            <Mail :size="20" class="text-smart-muted" :stroke-width="1.5" />
-          </template>
-        </AuthInput>
+          hide-label
+          borderless
+        />
         <AuthInput
           id="register-password"
           v-model="password"
@@ -151,13 +136,11 @@ function handleGithubLogin() {
           label="Password"
           type="password"
           autocomplete="new-password"
-          placeholder="Create a password"
+          placeholder="Password"
           :error="errors.password"
-        >
-          <template #icon>
-            <Lock :size="20" class="text-smart-muted" :stroke-width="1.5" />
-          </template>
-        </AuthInput>
+          hide-label
+          borderless
+        />
         <AuthInput
           id="register-confirm-password"
           v-model="confirmPassword"
@@ -167,22 +150,16 @@ function handleGithubLogin() {
           autocomplete="new-password"
           placeholder="Confirm password"
           :error="errors.confirmPassword"
-        >
-          <template #icon>
-            <LockKeyhole :size="20" class="text-smart-muted" :stroke-width="1.5" />
-          </template>
-        </AuthInput>
+          hide-label
+          borderless
+        />
 
-        <p
-          v-if="formError"
-          class="rounded border border-red-400/30 bg-red-500/10 px-3 py-2 text-sm text-red-200"
-        >
+        <p v-if="formError" class="auth-error rounded border px-3 py-2 text-sm">
           {{ formError }}
         </p>
 
         <PrimaryButton type="submit" :disabled="isSubmitting">
           {{ isSubmitting ? 'Creating account...' : 'Create account' }}
-          <ArrowRight v-if="!isSubmitting" :size="20" :stroke-width="1.5" />
         </PrimaryButton>
       </form>
 

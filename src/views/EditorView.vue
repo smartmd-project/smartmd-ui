@@ -5,6 +5,7 @@ import { useRouter } from 'vue-router'
 import AppShell from '@/components/AppShell.vue'
 import EditorTabs from '@/components/EditorTabs.vue'
 import FocusEditor from '@/components/FocusEditor.vue'
+import smartmdLogoUrl from '@/components/icons/smartmd-logo.png'
 import { useAuthStore } from '@/stores/auth'
 
 const router = useRouter()
@@ -140,8 +141,8 @@ const openTabs = computed(() =>
     .map((id) => documents.find((document) => document.id === id))
     .filter((document): document is WorkspaceDocument => Boolean(document)),
 )
-const activeDocument = computed<WorkspaceDocument>(() => {
-  return documents.find((document) => document.id === activeDocumentId.value) ?? documents[0]!
+const activeDocument = computed<WorkspaceDocument | null>(() => {
+  return documents.find((document) => document.id === activeDocumentId.value) ?? null
 })
 const workspaceFiles = computed(() =>
   documents.map((document) => ({
@@ -149,6 +150,7 @@ const workspaceFiles = computed(() =>
     name: document.name,
     meta: document.dirty ? 'Unsaved changes' : document.meta,
     pinned: document.pinned,
+    content: document.content,
   })),
 )
 
@@ -161,17 +163,18 @@ function openDocument(id: string) {
 }
 
 function closeTab(id: string) {
-  if (openTabIds.value.length === 1) {
-    return
-  }
-
   const closingIndex = openTabIds.value.indexOf(id)
   openTabIds.value = openTabIds.value.filter((tabId) => tabId !== id)
 
+  if (!openTabIds.value.length) {
+    activeDocumentId.value = ''
+    saveLabel.value = 'Save'
+    return
+  }
+
   if (activeDocumentId.value === id) {
     const fallbackIndex = Math.max(0, closingIndex - 1)
-    activeDocumentId.value =
-      openTabIds.value[fallbackIndex] ?? openTabIds.value[0] ?? documents[0]!.id
+    activeDocumentId.value = openTabIds.value[fallbackIndex] ?? openTabIds.value[0] ?? ''
   }
 }
 
@@ -197,7 +200,49 @@ Start writing your Markdown note here.`,
   openDocument(id)
 }
 
+function renameDocument(id: string, name: string) {
+  const nextName = name.trim()
+  const document = documents.find((item) => item.id === id)
+
+  if (!document || !nextName) {
+    return
+  }
+
+  document.name = nextName
+  document.title = nextName
+  document.dirty = true
+  saveLabel.value = 'Unsaved'
+}
+
+function deleteDocument(id: string) {
+  if (documents.length === 1) {
+    return
+  }
+
+  const documentIndex = documents.findIndex((document) => document.id === id)
+
+  if (documentIndex === -1) {
+    return
+  }
+
+  documents.splice(documentIndex, 1)
+  openTabIds.value = openTabIds.value.filter((tabId) => tabId !== id)
+
+  if (!openTabIds.value.length) {
+    activeDocumentId.value = ''
+    return
+  }
+
+  if (activeDocumentId.value === id) {
+    activeDocumentId.value = openTabIds.value[0] ?? ''
+  }
+}
+
 function updateActiveContent(value: string) {
+  if (!activeDocument.value) {
+    return
+  }
+
   activeDocument.value.content = value
   activeDocument.value.dirty = true
   saveLabel.value = 'Unsaved'
@@ -208,6 +253,10 @@ function toggleEditorMode() {
 }
 
 function handleSave() {
+  if (!activeDocument.value) {
+    return
+  }
+
   activeDocument.value.dirty = false
   activeDocument.value.meta = 'Saved just now'
   saveLabel.value = 'Saved'
@@ -219,6 +268,10 @@ function handleSave() {
   saveToastTimer = setTimeout(() => {
     saveLabel.value = 'Save'
   }, 1800)
+}
+
+function handleShare() {
+  void navigator.clipboard?.writeText(window.location.href)
 }
 
 async function handleLogout() {
@@ -236,31 +289,48 @@ onBeforeUnmount(() => {
 <template>
   <AppShell
     :user="user"
-    :save-label="saveLabel"
     :files="workspaceFiles"
+    :open-files="openTabs"
     :active-file-id="activeDocumentId"
-    @save="handleSave"
     @new-file="createDocument"
     @open-file="openDocument"
+    @close-file="closeTab"
+    @rename-file="renameDocument"
+    @delete-file="deleteDocument"
     @logout="handleLogout"
   >
     <section
-      class="flex min-h-0 flex-1 flex-col overflow-hidden rounded-[10px] border border-smart-border bg-[#071219]"
+      class="editor-frame flex min-h-0 flex-1 flex-col overflow-hidden rounded-lg border border-smart-border bg-smart-editor"
     >
       <EditorTabs
         :tabs="openTabs"
         :active-tab-id="activeDocumentId"
         :mode="editorMode"
+        :save-label="saveLabel"
         @select-tab="openDocument"
         @close-tab="closeTab"
         @new-tab="createDocument"
         @toggle-mode="toggleEditorMode"
+        @share="handleShare"
+        @save="handleSave"
       />
       <FocusEditor
+        v-if="activeDocument"
         :document="activeDocument"
         :mode="editorMode"
         @update-content="updateActiveContent"
       />
+      <div
+        v-else
+        class="editor-pane flex min-h-0 flex-1 items-center justify-center overflow-hidden bg-smart-editor"
+      >
+        <div class="flex flex-col items-center gap-5 opacity-[0.16]" aria-hidden="true">
+          <img :src="smartmdLogoUrl" alt="" class="h-44 w-44 object-contain grayscale" />
+          <p class="font-mono text-xs font-semibold uppercase tracking-[0.18em] text-smart-muted">
+            SmartMD
+          </p>
+        </div>
+      </div>
     </section>
   </AppShell>
 </template>
